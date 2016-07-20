@@ -1,0 +1,5 @@
+network={
+	ssid="tao"
+	#psk="12345678"
+	psk=6c2734024bbc1a349e31e627c536a4d04ca5632e1ee45f33240d2c23a44f7331
+}
