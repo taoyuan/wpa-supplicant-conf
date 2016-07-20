@@ -2,7 +2,7 @@
 
 import {assert} from 'chai';
 import * as s from './support';
-import WPAConf from '../src/wpaconf';
+import {WPAConf} from '../src';
 
 describe('WPAConf', () => {
 
