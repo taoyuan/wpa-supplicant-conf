@@ -12,7 +12,7 @@ import fs from 'fs';
 import * as s from './support';
 import {parse} from '../src/parser';
 
-describe('parser', () => {
+describe('Parser', () => {
 
   it('should return parsed nets', () => {
     let content = fs.readFileSync(s.EXAMPLE_CONF_FILE, "utf-8");

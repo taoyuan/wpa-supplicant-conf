@@ -43,12 +43,14 @@
     "eslint-plugin-import": "^1.7.0",
     "eslint-plugin-jsx-a11y": "^1.2.0",
     "eslint-plugin-react": "^5.1.1",
+    "fs-extra": "^0.30.0",
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^2.5.3",
     "nock-exec": "aledlewis/nock-exec",
     "rollup": "^0.34.1",
     "rollup-plugin-babel": "^2.6.1",
-    "sinon": "^2.0.0-pre"
+    "sinon": "^2.0.0-pre",
+    "tmp": "0.0.28"
   },
   "scripts": {
     "lint": "eslint src test tools",
@@ -59,6 +61,7 @@
     "build": "node tools/build",
     "prepublish": "npm run build",
     "publish:docs": "easystatic deploy docs --repo taoyuan/wpa-supplicant-conf",
-    "start": "easystatic start docs"
+    "start": "easystatic start docs",
+    "publish:dist": "npm run build && cd dist && npm publish && cd .."
   }
 }

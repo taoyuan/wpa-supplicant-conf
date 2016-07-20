@@ -1,6 +1,6 @@
 "use strict";
 
-import fs from 'fs';
+import fs from 'fs-extra';
 import nockexec from 'nock-exec';
 
 export const EXAMPLE_CONF_FILE = `${__dirname}/fixtures/wpa_supplicant.example.conf`;
@@ -18,3 +18,16 @@ export const EXAMPLE_CONF_OBJECT= {
 
 const EXAMPLE_PASSPHRASE = fs.readFileSync(EXAMPLE_PASSPHRASE_FILE, 'utf-8');
 nockexec('wpa_passphrase "tao" "12345678"').out(EXAMPLE_PASSPHRASE);
+
+export function copyFile(from, to) {
+  fs.writeFileSync(to, fs.readFileSync(from));
+}
+
+export function fileContains(file, s) {
+  const content = fs.readFileSync(file, 'utf-8');
+  if (s instanceof RegExp) {
+    return s.test(content);
+  } else {
+    return content.indexOf(s) >= 0;
+  }
+}

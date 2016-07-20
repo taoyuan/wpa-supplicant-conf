@@ -1,6 +1,7 @@
 "use strict";
 
 import {assert} from 'chai';
+import tmp  from 'tmp';
 import * as s from './support';
 import {WPAConf} from '../src';
 
@@ -21,6 +22,17 @@ describe('WPAConf', () => {
     });
   });
 
+  it('should add and save network item', () => {
+    const tmpobj = tmp.fileSync();
+    const file = tmpobj.name;
+
+    s.copyFile(s.EXAMPLE_CONF_FILE, file);
+    const wpaconf = new WPAConf(file);
+    return wpaconf.addAndSave('tao', '12345678').then(() => {
+      assert.ok(s.fileContains(file, /ssid="tao"/));
+    }).finally(() => tmpobj.removeCallback());
+  });
+
   it('should remove network item', () => {
     const wpaconf = new WPAConf(s.EXAMPLE_CONF_FILE);
     return wpaconf.remove('example').then(() => {
@@ -28,4 +40,19 @@ describe('WPAConf', () => {
       assert.equal(wpaconf.nets[0].key_mgmt, 'NONE');
     });
   });
+
+  it('should remove and save network item', () => {
+    const tmpobj = tmp.fileSync();
+    const file = tmpobj.name;
+
+    s.copyFile(s.EXAMPLE_CONF_FILE, file);
+
+    assert.ok(s.fileContains(file, /ssid="example"/));
+
+    const wpaconf = new WPAConf(file);
+    return wpaconf.removeAndSave('example').then(() => {
+      assert.notOk(s.fileContains(file, /ssid="example"/));
+    }).finally(() => tmpobj.removeCallback());
+  });
+
 });

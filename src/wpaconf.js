@@ -45,10 +45,10 @@ class WPAConf {
         return name + '=' + net[name];
       });
       conf += '\nnetwork={\n';
-      conf += props.join('\n');
+      conf += '\t' + props.join('\n\t');
       conf += '\n}';
     });
-    fs.writeFileSync(file, conf, { encoding: "utf-8" });
+    fs.writeFileSync(file, conf, {encoding: "utf-8"});
   }
 
   add(ssid, password, options) {
@@ -58,25 +58,29 @@ class WPAConf {
 
     const that = this;
     options = options || {};
-    return exec(`wpa_passphrase "${ssid}" "${password}"`).then(result => {
-      const content = result.stdout.toString('utf-8');
-      let newnets = parse(content).nets;
-      if (!newnets.length) {
-        return false;
-      }
-      const newnet = {
-        ...newnets[0],
-        ...options
-      };
-      const index = that.nets.findIndex(net => net.ssid === newnet.ssid);
-      if (index >= 0) {
-        that.nets.splice(index, 1, newnet);
-      } else {
-        that.nets.push(newnet);
-      }
+    return new Promise((resolve, reject) => {
+      exec(`wpa_passphrase "${ssid}" "${password}"`)
+        .then(result => {
+          const content = result.stdout.toString('utf-8');
+          let newnets = parse(content).nets;
+          if (!newnets.length) {
+            return false;
+          }
+          const newnet = {
+            ...newnets[0],
+            ...options
+          };
+          const index = that.nets.findIndex(net => net.ssid === newnet.ssid);
+          if (index >= 0) {
+            that.nets.splice(index, 1, newnet);
+          } else {
+            that.nets.push(newnet);
+          }
 
-      that.markChanged();
-      return true;
+          that.markChanged();
+          return true;
+        })
+        .then(resolve, reject);
     });
   }
 
