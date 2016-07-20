@@ -1,11 +1,9 @@
 "use strict";
 
-// const regex = /^"(.+)"$/;
-
 export function parse(lines) {
   let conf = '';
   let nets = [];
-  let net, pair, value;
+  let net, pair;
   let start = false;
   let firstnet = false;
   let endnetwork = true;
@@ -26,11 +24,6 @@ export function parse(lines) {
         firstnet = false;
         nets.push(net);
       } else if (firstnet && (pair = line.split("=")) && pair.length == 2) {
-        // value = pair[1];
-        // value = value && value.trim();
-        // if (regex.test(value)) {
-        //   value = regex.exec(value)[1];
-        // }
         net[pair[0].replace(/ /g, "")] = pair[1];
       } else if (!start && line) {
         if (conf != "") {
