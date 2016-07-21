@@ -72,6 +72,10 @@ class WPAConf {
     }
     delete options.password;
 
+    if (password && password.length < 8) {
+      return Promise.reject("password must be 8 characters minimum");
+    }
+
     const that = this;
     options = options || {};
     return new Promise((resolve, reject) => {
