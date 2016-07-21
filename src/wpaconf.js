@@ -52,24 +52,47 @@ class WPAConf {
   }
 
   add(ssid, password, options) {
-    if (password.length < 8) {
-      Promise.reject("password must be 8 characters minimum");
+    if (password && typeof password !== 'string') {
+      options = password;
+      password = null;
+    } else if (ssid && typeof ssid !== 'string') {
+      options = ssid;
+      ssid = null;
+      password = null;
     }
+    options = options || {};
+
+    if (!ssid) {
+      ssid = options.ssid;
+    }
+    delete options.ssid;
+
+    if (!password) {
+      password = options.password;
+    }
+    delete options.password;
 
     const that = this;
     options = options || {};
     return new Promise((resolve, reject) => {
-      exec(`wpa_passphrase "${ssid}" "${password}"`)
-        .then(result => {
-          const content = result.stdout.toString('utf-8');
-          let newnets = parse(content).nets;
-          if (!newnets.length) {
-            return false;
-          }
-          const newnet = {
-            ...newnets[0],
-            ...options
-          };
+      let promise = Promise.resolve({ssid, ...options});
+      if (password) {
+        promise = promise
+          .then(() => exec(`wpa_passphrase "${ssid}" "${password}"`))
+          .then(result => {
+            const content = result.stdout.toString('utf-8');
+            let newnets = parse(content).nets;
+            if (!newnets.length) {
+              return false;
+            }
+            return {
+              ...options,
+              ...newnets[0]
+            }
+          });
+      }
+      return promise
+        .then((newnet) => {
           const index = that.nets.findIndex(net => net.ssid === newnet.ssid);
           if (index >= 0) {
             that.nets.splice(index, 1, newnet);

@@ -55,4 +55,25 @@ describe('WPAConf', () => {
     }).finally(() => tmpobj.removeCallback());
   });
 
+  it('should add network item with only options', () => {
+    const wpaconf = new WPAConf(s.EXAMPLE_CONF_FILE);
+    return wpaconf.add({
+      ssid: 'tao',
+      password: '12345678'
+    }).then(() => {
+      assert.lengthOf(wpaconf.nets, 3);
+      assert.equal(wpaconf.nets[2].ssid, '"tao"');
+    });
+  });
+
+  it('should add un-secure network item', () => {
+    const wpaconf = new WPAConf(s.EXAMPLE_CONF_FILE);
+    return wpaconf.add('tao', {
+      key_mgmt: 'NONE'
+    }).then(() => {
+      assert.lengthOf(wpaconf.nets, 3);
+      assert.deepEqual(wpaconf.nets[2], {ssid: 'tao', key_mgmt: 'NONE'});
+    });
+  });
+
 });
