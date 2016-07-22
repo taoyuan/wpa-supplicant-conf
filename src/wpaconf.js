@@ -130,7 +130,10 @@ class WPAConf {
   }
 
   removeAndSave(ssid) {
-    return this.remove(ssid).then(() => this.save());
+    return this.remove(ssid).then((removed) => {
+      this.save();
+      return removed;
+    });
   }
 
 }
