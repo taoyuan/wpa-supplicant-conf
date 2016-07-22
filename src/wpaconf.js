@@ -122,8 +122,10 @@ class WPAConf {
       if (index >= 0) {
         this.nets.splice(index, 1);
         this.markChanged();
+        resolve(true);
+      } else {
+        resolve(false);
       }
-      resolve(true);
     });
   }
 
