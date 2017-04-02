@@ -8,10 +8,6 @@
   "keywords": [],
   "main": "src/index.js",
   "jsnext:main": "src/index.js",
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "extends": "airbnb/base"
-  },
   "dependencies": {
     "bluebird": "^3.5.0",
     "child-process-promise": "^2.2.1"
@@ -28,8 +24,6 @@
   },
   "scripts": {
     "clean": "rimraf lib/ && mkdirp lib/",
-    "lint": "standard",
-    "prebuild": "npm run clean -s",
     "test": "mocha",
     "test:watch": "npm test -- --watch",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
