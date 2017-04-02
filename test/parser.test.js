@@ -7,13 +7,12 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import {assert} from 'chai';
-import fs from 'fs';
-import * as s from './support';
-import {parse} from '../src/parser';
+const {assert} = require('chai');
+const fs = require('fs');
+const s = require('./support');
+const {parse} = require('../src/parser');
 
 describe('Parser', () => {
-
   it('should return parsed nets', () => {
     let content = fs.readFileSync(s.EXAMPLE_CONF_FILE, "utf-8");
     const result = parse(content);

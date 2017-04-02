@@ -7,4 +7,4 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-export WPAConf from './wpaconf.js';
+exports.WPAConf = require('./wpaconf.js');

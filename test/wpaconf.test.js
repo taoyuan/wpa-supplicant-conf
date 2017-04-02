@@ -1,9 +1,9 @@
 "use strict";
 
-import {assert} from 'chai';
-import tmp  from 'tmp';
-import * as s from './support';
-import {WPAConf} from '../src';
+const {assert} = require('chai');
+const tmp  = require('tmp');
+const s = require('./support');
+const {WPAConf} = require('..');
 
 describe('WPAConf', () => {
 

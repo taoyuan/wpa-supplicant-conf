@@ -1,6 +1,6 @@
 "use strict";
 
-export function parse(lines) {
+exports.parse = function (lines) {
   let conf = '';
   let nets = [];
   let net, pair;
@@ -26,7 +26,7 @@ export function parse(lines) {
       } else if (firstnet && (pair = line.split("=")) && pair.length == 2) {
         net[pair[0].replace(/ /g, "")] = pair[1];
       } else if (!start && line) {
-        if (conf != "") {
+        if (conf !== "") {
           conf = conf + "\n" + line;
         } else {
           conf = line;
@@ -36,4 +36,4 @@ export function parse(lines) {
   });
 
   return {nets, conf};
-}
+};

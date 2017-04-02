@@ -7,18 +7,12 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import fs from 'fs';
-import Promise from 'bluebird';
-import {exec} from 'child-process-promise';
-import {parse} from './parser';
+const fs = require('fs');
+const PromiseA = require('bluebird');
+const {exec} = require('child-process-promise');
+const {parse} = require('./parser');
 
 class WPAConf {
-
-  file;
-  conf;
-  nets;
-
-  _changed = false;
 
   constructor(file) {
     if (!fs.existsSync(file)) {
@@ -30,6 +24,7 @@ class WPAConf {
     this.conf = result.conf;
     this.nets = result.nets;
     this.file = file;
+    this._changed = false;
   }
 
   markChanged() {
@@ -62,53 +57,67 @@ class WPAConf {
     }
     options = options || {};
 
-    if (!ssid) {
-      ssid = options.ssid;
-    }
-    delete options.ssid;
-
-    if (!password) {
-      password = options.password;
-    }
+    ssid = options.ssid = ssid || options.ssid;
+    password = password || options.password;
     delete options.password;
 
     if (password && password.length < 8) {
-      return Promise.reject("password must be 8 characters minimum");
+      return PromiseA.reject("password must be 8 characters minimum");
     }
 
-    const that = this;
-    options = options || {};
-    return new Promise((resolve, reject) => {
-      let promise = Promise.resolve({ssid, ...options});
-      if (password) {
-        promise = promise
-          .then(() => exec(`wpa_passphrase "${ssid}" "${password}"`))
-          .then(result => {
-            const content = result.stdout.toString('utf-8');
-            let newnets = parse(content).nets;
-            if (!newnets.length) {
-              return false;
-            }
-            return {
-              ...options,
-              ...newnets[0]
-            }
-          });
+    return PromiseA.try(() => {
+      if (!password) return options;
+      return exec(`wpa_passphrase "${ssid}" "${password}"`).then(result => {
+        const content = result.stdout.toString();
+        let newnets = parse(content).nets;
+        if (!newnets.length) {
+          return false;
+        }
+        return Object.assign(options, newnets[0]);
+      });
+    }).then(newnet => {
+      const index = this.nets.findIndex(net => net.ssid === newnet.ssid);
+      if (index >= 0) {
+        this.nets.splice(index, 1, newnet);
+      } else {
+        this.nets.push(newnet);
       }
-      return promise
-        .then((newnet) => {
-          const index = that.nets.findIndex(net => net.ssid === newnet.ssid);
-          if (index >= 0) {
-            that.nets.splice(index, 1, newnet);
-          } else {
-            that.nets.push(newnet);
-          }
 
-          that.markChanged();
-          return true;
-        })
-        .then(resolve, reject);
+      this.markChanged();
+      return true;
     });
+
+    // return new PromiseA((resolve, reject) => {
+    //   let promise = PromiseA.resolve({ssid, ...options});
+    //   if (password) {
+    //     promise = promise
+    //       .then(() => exec(`wpa_passphrase "${ssid}" "${password}"`))
+    //       .then(result => {
+    //         const content = result.stdout.toString('utf-8');
+    //         let newnets = parse(content).nets;
+    //         if (!newnets.length) {
+    //           return false;
+    //         }
+    //         return {
+    //           ...options,
+    //           ...newnets[0]
+    //         }
+    //       });
+    //   }
+    //   return promise
+    //     .then((newnet) => {
+    //       const index = this.nets.findIndex(net => net.ssid === newnet.ssid);
+    //       if (index >= 0) {
+    //         this.nets.splice(index, 1, newnet);
+    //       } else {
+    //         this.nets.push(newnet);
+    //       }
+    //
+    //       this.markChanged();
+    //       return true;
+    //     })
+    //     .then(resolve, reject);
+    // });
   }
 
   addAndSave(ssid, password, options) {
@@ -116,15 +125,13 @@ class WPAConf {
   }
 
   remove(ssid) {
-    return new Promise((resolve) => {
+    return PromiseA.try(() => {
       const ssidToCompare = `"${ssid}"`;
       const index = this.nets.findIndex(net => net.ssid === ssidToCompare);
       if (index >= 0) {
         this.nets.splice(index, 1);
         this.markChanged();
-        resolve(true);
-      } else {
-        resolve(false);
+        return true;
       }
     });
   }
@@ -138,4 +145,4 @@ class WPAConf {
 
 }
 
-export default WPAConf;
+module.exports = WPAConf;
