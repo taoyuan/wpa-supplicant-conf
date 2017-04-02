@@ -32,7 +32,6 @@
     "prebuild": "npm run clean -s",
     "test": "mocha",
     "test:watch": "npm test -- --watch",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "prepublish": "npm run build"
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
 }
