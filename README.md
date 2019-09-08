@@ -4,7 +4,7 @@
 [![NPM downloads](http://img.shields.io/npm/dm/wpa-supplicant-conf.svg?style=flat-square)](https://www.npmjs.com/package/wpa-supplicant-conf)
 [![Build Status](http://img.shields.io/travis/taoyuan/wpa-supplicant-conf/master.svg?style=flat-square)](https://travis-ci.org/taoyuan/wpa-supplicant-conf)
 [![Coverage Status](https://img.shields.io/coveralls/taoyuan/wpa-supplicant-conf.svg?style=flat-square)](https://coveralls.io/taoyuan/wpa-supplicant-conf)
-[![Dependency Status](http://img.shields.io/david/taoyuan/wpa-supplicant-conf.svg?style=flat-square)](https://david-dm.org/taoyuan/wpa-supplicant-conf)
+[![Dependency Status](http://img.shields.io/david/taoyuan/wpa-supplicant-conf.svg?style=flat-square)](https://david-dm.org/taoyuan/wpa-supplicant-conf) [![Greenkeeper badge](https://badges.greenkeeper.io/taoyuan/wpa-supplicant-conf.svg)](https://greenkeeper.io/)
 
 > wpa_supplicant config management
 
