@@ -13,14 +13,14 @@
     "child-process-promise": "^2.2.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "fs-extra": "^2.1.2",
+    "chai": "^4.2.0",
+    "fs-extra": "^8.1.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.2.0",
+    "mocha": "^6.2.0",
     "nock-exec": "^0.1.0",
-    "rimraf": "^2.6.1",
-    "standard": "^9.0.2",
-    "tmp": "0.0.31"
+    "rimraf": "^3.0.0",
+    "standard": "^14.1.0",
+    "tmp": "0.1.0"
   },
   "scripts": {
     "clean": "rimraf lib/ && mkdirp lib/",
